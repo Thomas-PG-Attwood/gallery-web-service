@@ -25,8 +25,8 @@ public class GalleriesService {
   public Galleries getAllGalleries() throws SQLException, ConfigurationException, ServiceUnavailableException {
 
     log.trace("starting getAllGalleries()");
-    String thumbsPath = configurationDao.getParameter("THUMBS_PATH");
 
+    String thumbsPath = configurationDao.getParameter("THUMBS_PATH");
     String fullPath = configurationDao.getParameter("FULL_PATH");
 
     Galleries galleries = galleriesDao.getAllGalleries();

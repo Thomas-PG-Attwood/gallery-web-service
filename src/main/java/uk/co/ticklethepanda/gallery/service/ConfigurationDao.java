@@ -12,30 +12,35 @@ import java.sql.SQLException;
  */
 public class ConfigurationDao {
 
-  private final Connection connection;
+  private final DatabaseConnector connector;
 
   public ConfigurationDao(DatabaseConnector connector) throws ServiceUnavailableException {
-    this.connection = connector.getDatabaseConnection();
+    this.connector = connector;
   }
   
-  public String getParameter(String parameter) throws SQLException, ConfigurationException {
-    ResultSet results = getConfigResults(parameter);
+  public String getParameter(String parameter) throws SQLException, ConfigurationException, ServiceUnavailableException {
 
-    if(results.next()) {
-      return results.getString("VALUE");
-    } else {
-      throw new
-          ConfigurationException("The " + parameter +" in the config table of the database was not set.");
+    try(Connection connection = connector.getDatabaseConnection()) {
+
+      ResultSet results = getResultSetForParameter(parameter, connection);
+
+      if (results.next()) {
+        return results.getString("VALUE");
+      } else {
+        throw new ConfigurationException(
+            "The {0} in the config table of the database was not set."
+                .replace("{0}", parameter));
+      }
     }
   }
 
-  private ResultSet getConfigResults(String parameter) throws SQLException {
+  private ResultSet getResultSetForParameter(String parameter, Connection connection) throws SQLException {
     PreparedStatement statement = connection.prepareStatement(
         "select * from config where parameter = ?");
 
     statement.setString(1, parameter);
     statement.execute();
 
-    return statement.getResultSet();
+    return statement.executeQuery();
   }
 }
