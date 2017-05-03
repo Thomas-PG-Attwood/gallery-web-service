@@ -3,13 +3,13 @@ package uk.co.ticklethepanda.gallery.service;
 /**
  * Created by panda on 08/05/16.
  */
-public class Image {
+public class ImageDto {
 
   private final String description;
   private final String name;
   private final String fileName;
 
-  private Image(String name, String description, String fileName) {
+  private ImageDto(String name, String description, String fileName) {
     this.name = name;
     this.description = description;
     this.fileName = fileName;
@@ -47,8 +47,8 @@ public class Image {
       return this;
     }
 
-    public Image build() {
-      return new Image(name, description, fileName);
+    public ImageDto build() {
+      return new ImageDto(name, description, fileName);
     }
   }
 }

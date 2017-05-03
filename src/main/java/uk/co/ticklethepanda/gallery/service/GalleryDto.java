@@ -7,15 +7,15 @@ import java.util.List;
 /**
  * Created by panda on 08/05/16.
  */
-public class Gallery {
+public class GalleryDto {
 
   private final String reference;
   private final String name;
   private final String description;
   private final LocalDate dateTaken;
-  private final List<Image> images;
+  private final List<ImageDto> images;
 
-  public Gallery(String reference, String name, String description, LocalDate dateTaken) {
+  public GalleryDto(String reference, String name, String description, LocalDate dateTaken) {
     this.reference = reference;
     this.name = name;
     this.description = description;
@@ -39,12 +39,16 @@ public class Gallery {
     return dateTaken;
   }
 
-  public void addImage(Image image) {
-    this.getImages().add(image);
+  public void addImage(ImageDto imageDto) {
+    this.getImages().add(imageDto);
   }
 
-  public List<Image> getImages() {
+  public List<ImageDto> getImages() {
     return images;
+  }
+
+  public void addImages(List<ImageDto> imageDtos) {
+    images.addAll(imageDtos);
   }
 
   public static class Builder {
@@ -73,8 +77,8 @@ public class Gallery {
       return this;
     }
 
-    public Gallery build() {
-      return new Gallery(reference, name, description, dateTaken);
+    public GalleryDto build() {
+      return new GalleryDto(reference, name, description, dateTaken);
     }
   }
 }

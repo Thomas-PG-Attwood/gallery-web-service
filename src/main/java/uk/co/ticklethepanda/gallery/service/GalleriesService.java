@@ -2,40 +2,57 @@ package uk.co.ticklethepanda.gallery.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import uk.co.ticklethepanda.gallery.service.data.Gallery;
+import uk.co.ticklethepanda.gallery.service.data.GalleryRepo;
+import uk.co.ticklethepanda.gallery.service.transformers.GalleryTransformer;
 
 import javax.naming.ConfigurationException;
 import javax.naming.ServiceUnavailableException;
 import java.sql.SQLException;
+import java.util.List;
 
-/**
- * Created by panda on 08/05/16.
- */
+@Service
 public class GalleriesService {
 
   public static final Logger log = LogManager.getLogger();
 
-  GalleriesDao galleriesDao;
-  ConfigurationDao configurationDao;
+  private final String thumbsPath;
+  private final String fullPath;
 
-  public GalleriesService(DatabaseConnector connector) throws ServiceUnavailableException {
-    galleriesDao = new GalleriesDao(connector);
-    configurationDao = new ConfigurationDao(connector);
+  private final GalleryRepo galleryRepo;
+  private final GalleryTransformer galleryTransformer;
+
+  @Autowired
+  public GalleriesService(
+          GalleryRepo repo,
+          GalleryTransformer galleryTransformer,
+          @Value("${gallery.service.thumbs.path}") String thumbsPath,
+          @Value("${gallery.service.full.path}") String fullPath
+  ) {
+    this.galleryRepo = repo;
+    this.thumbsPath = thumbsPath;
+    this.fullPath = fullPath;
+    this.galleryTransformer = galleryTransformer;
   }
 
-  public Galleries getAllGalleries() throws SQLException, ConfigurationException, ServiceUnavailableException {
+  public GalleriesDto getAllGalleries() throws SQLException, ConfigurationException, ServiceUnavailableException {
 
     log.trace("starting getAllGalleries()");
 
-    String thumbsPath = configurationDao.getParameter("THUMBS_PATH");
-    String fullPath = configurationDao.getParameter("FULL_PATH");
+    List<Gallery> galleries = galleryRepo.findAll();
 
-    Galleries galleries = galleriesDao.getAllGalleries();
-    galleries.setThumbsPath(thumbsPath);
-    galleries.setFullPath(fullPath);
+    GalleriesDto galleriesDto = new GalleriesDto();
+
+    galleriesDto.addGalleries(galleryTransformer.convertList(galleries));
+    galleriesDto.setThumbsPath(thumbsPath);
+    galleriesDto.setFullPath(fullPath);
 
     log.trace("exiting getAllGalleries()");
 
-    return galleries;
+    return galleriesDto;
 
   }
 

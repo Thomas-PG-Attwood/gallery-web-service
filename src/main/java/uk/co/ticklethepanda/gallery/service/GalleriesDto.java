@@ -3,32 +3,29 @@ package uk.co.ticklethepanda.gallery.service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by panda on 08/05/16.
- */
-public class Galleries {
+public class GalleriesDto {
 
   private String thumbsPath;
   private String fullPath;
-  private List<Gallery> galleries = new ArrayList<>();
+  private List<GalleryDto> galleries = new ArrayList<>();
 
   public boolean containsGalleryByReference(String reference) {
     return getGalleries().stream().anyMatch(g -> g.getReference().equals(reference));
   }
 
-  public void addImageToGallery(String galleryReference, Image image) {
+  public void addImageToGallery(String galleryReference, ImageDto imageDto) {
     this.getGalleries().stream()
         .filter(g -> g.getReference().equals(galleryReference))
         .findFirst()
         .get()
-        .addImage(image);
+        .addImage(imageDto);
   }
 
-  public void addGallery(Gallery gallery) {
-    getGalleries().add(gallery);
+  public void addGallery(GalleryDto galleryDto) {
+    getGalleries().add(galleryDto);
   }
 
-  public List<Gallery> getGalleries() {
+  public List<GalleryDto> getGalleries() {
     return this.galleries;
   };
 
@@ -46,5 +43,9 @@ public class Galleries {
 
   public void setFullPath(String fullPath) {
     this.fullPath = fullPath;
+  }
+
+  public void addGalleries(List<GalleryDto> galleriesDtos) {
+    this.galleries.addAll(galleriesDtos);
   }
 }

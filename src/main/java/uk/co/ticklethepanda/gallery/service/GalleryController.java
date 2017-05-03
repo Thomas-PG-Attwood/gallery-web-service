@@ -2,6 +2,7 @@ package uk.co.ticklethepanda.gallery.service;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,12 +22,15 @@ public class GalleryController {
 
   GalleriesService service;
 
-  public GalleryController() throws ServiceUnavailableException {
-    this.service = new GalleriesService(new DatabaseConnector());
+  @Autowired
+  public GalleryController(
+          GalleriesService galleryService
+  ) throws ServiceUnavailableException {
+    this.service = galleryService;
   }
 
   @RequestMapping(value="/gallery", method=GET)
-  public Galleries gallery() throws SQLException, ServiceUnavailableException, ConfigurationException {
+  public GalleriesDto gallery() throws SQLException, ServiceUnavailableException, ConfigurationException {
     log.trace("starting gallery");
     return service.getAllGalleries();
   }
