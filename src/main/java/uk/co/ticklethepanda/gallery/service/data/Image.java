@@ -20,6 +20,9 @@ public class Image implements Serializable {
     @Column(name = "DESCRIPTION")
     private String description;
 
+    @Column(name = "FAVOURITE")
+    private boolean favourite;
+
     public Image() {
     }
 
@@ -53,5 +56,13 @@ public class Image implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        this.favourite = favourite;
     }
 }

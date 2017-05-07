@@ -11,9 +11,10 @@ public class ImageTransformer implements Transformer<Image, ImageDto> {
     public ImageDto convert(Image input) {
 
         return new ImageDto.Builder()
-                        .withName(input.getName())
-                        .withDescription(input.getDescription())
-                        .withFileName(input.getFileName())
-                        .build();
+                .withName(input.getName())
+                .withDescription(input.getDescription())
+                .withFileName(input.getFileName())
+                .withFavourite(input.isFavourite())
+                .build();
     }
 }
